@@ -3,6 +3,9 @@ import Copyright from "@/components/auth/Copyright.astro";
 import AuthLayout from "@/layouts/AuthLayout.astro";
 
 export const prerender = false;
+
+const email = Astro.cookies.get("email")?.value ?? "";
+const rememberMe = !!email;
 ---
 
 <AuthLayout>
@@ -10,7 +13,7 @@ export const prerender = false;
     <h3 class="font-semibold text-2xl text-gray-800">Iniciar Sesion</h3>
     <p class="text-gray-500">Por favor inicia sesión en tu cuenta.</p>
   </div>
-  <div class="space-y-5">
+  <form class="space-y-5">
     <div class="space-y-2">
       <label class="text-sm font-medium text-gray-700 tracking-wide"
         >Email</label
@@ -18,6 +21,8 @@ export const prerender = false;
       <input
         class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
         type="email"
+        name="email"
+        value={email}
         placeholder="mail@gmail.com"
       />
     </div>
@@ -28,6 +33,7 @@ export const prerender = false;
       <input
         class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
         type="password"
+        name="password"
         placeholder="Ingresa tu contraseña"
       />
     </div>
@@ -37,6 +43,7 @@ export const prerender = false;
           id="remember_me"
           name="remember_me"
           type="checkbox"
+          checked={rememberMe}
           class="h-4 w-4 bg-blue-500 focus:ring-blue-400 border-gray-300 rounded"
         />
         <label for="remember_me" class="ml-2 block text-sm text-gray-800">
@@ -51,6 +58,7 @@ export const prerender = false;
     </div>
     <div>
       <button
+        id="btn-submit"
         type="submit"
         class="w-full flex justify-center bg-green-400 hover:bg-green-500 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
       >
@@ -63,6 +71,36 @@ export const prerender = false;
         ¿No tienes cuenta? Registrate
       </a>
     </div>
-  </div>
+  </form>
   <Copyright />
 </AuthLayout>
+
+<script>
+  import { actions } from "astro:actions";
+  import Swal from "sweetalert2";
+  //import Swal from "sweetalert2";
+
+  const form = document.querySelector("form") as HTMLFormElement;
+  const btnSubmit = document.querySelector("#btn-submit") as HTMLButtonElement;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    btnSubmit.setAttribute("disabled", "disabled");
+
+    const formData = new FormData(form);
+
+    const { data, error } = await actions.loginUser(formData);
+
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Credenciales no son correctas",
+        text: error.message,
+      });
+      btnSubmit.removeAttribute("disabled");
+      return;
+    }
+
+    window.location.replace("/protected");
+  });
+</script>

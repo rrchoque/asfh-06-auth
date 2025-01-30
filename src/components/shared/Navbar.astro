@@ -16,7 +16,7 @@
         <a href="/login">Ingresar</a>
       </li>
       <li class="font-semibold text-gray-700">
-        <a href="#">Salir</a>
+        <a id="logout" href="#">Salir</a>
       </li>
       <li>
         <svg
@@ -57,3 +57,14 @@
     </ul>
   </div>
 </nav>
+
+<script>
+  import { actions } from "astro:actions";
+
+  const logoutElem = document.querySelector("#logout") as HTMLLIElement;
+
+  logoutElem?.addEventListener("click", async () => {
+    await actions.logout();
+    window.location.href = "/";
+  });
+</script>

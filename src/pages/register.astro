@@ -6,7 +6,6 @@ export const prerender = false;
 
 const email = Astro.cookies.get("email")?.value ?? "";
 const rememberMe = !!email;
-console.log({ email });
 ---
 
 <AuthLayout>

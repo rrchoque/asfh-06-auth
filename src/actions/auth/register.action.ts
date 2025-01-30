@@ -18,7 +18,7 @@ export const registerUser = defineAction({
     }),
   handler: async ({ name, password, remember_me, email }, context) => {
     const { cookies } = context;
-    console.log({ name, password, remember_me, email });
+    //console.log({ name, password, remember_me, email });
     // cookies
     if (remember_me) {
       cookies.set("email", email, {
@@ -39,7 +39,7 @@ export const registerUser = defineAction({
         password
       );
 
-      console.log({ user });
+      //console.log({ user });
       // Actualizar el nombre del usuario
 
       // Verificar el correo electrónico
@@ -50,7 +50,7 @@ export const registerUser = defineAction({
         email: user.user.email,
       };
     } catch (error) {
-      console.log(error);
+      console.log({ error });
 
       const firebaseError = error as AuthError;
 
