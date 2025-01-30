@@ -1,6 +1,8 @@
 ---
 import Copyright from "@/components/auth/Copyright.astro";
 import AuthLayout from "@/layouts/AuthLayout.astro";
+
+export const prerender = false;
 ---
 
 <AuthLayout>
@@ -56,7 +58,7 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
       </button>
       <a
         href="/register"
-        class="w-full flex justify-center bg-gray-200 hover:bg-gray-300 text-gray-600 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500 mt-4"
+        class="w-full flex justify-center bg-white border border-gray-200 hover:bg-gray-100 text-gray-500 p-3 rounded-full tracking-wide font-semibold shadow-md cursor-pointer transition ease-in duration-300 mt-4"
       >
         ¿No tienes cuenta? Registrate
       </a>
