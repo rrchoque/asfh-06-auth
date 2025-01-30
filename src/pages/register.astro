@@ -107,7 +107,7 @@ console.log({ email });
     const formData = new FormData(form);
 
     const { data, error } = await actions.registerUser(formData);
-    console.log(error);
+    console.log({ data, error });
     // if (error) {
     //   Swal.fire({
     //     icon: "error",
