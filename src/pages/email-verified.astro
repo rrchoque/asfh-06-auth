@@ -1,0 +1,22 @@
+---
+import { firebase } from "@/firebase/config";
+import MainLayout from "@/layouts/MainLayout.astro";
+import { Image } from "astro:assets";
+
+export const prerender = false;
+
+const firebaseUser = firebase.auth.currentUser;
+
+console.log({ firebaseUser });
+
+if (firebaseUser === null) {
+  return Astro.redirect("/login");
+}
+
+const { displayName, email, emailVerified, photoURL } = firebaseUser;
+const name = displayName ?? "No display Name";
+---
+
+<MainLayout>
+  <h1 class="text-3xl">Email verificado</h1>
+</MainLayout>
