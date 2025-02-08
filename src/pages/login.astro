@@ -60,13 +60,32 @@ const rememberMe = !!email;
       <button
         id="btn-submit"
         type="submit"
-        class="disabled:bg-gray-300 w-full flex justify-center bg-green-400 hover:bg-green-500 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
+        class="disabled:bg-gray-300 w-full flex justify-center bg-green-400 hover:bg-green-500 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-300"
       >
         Ingresar
       </button>
+
+      <button
+        type="button"
+        id="btn-google"
+        class="mt-5 disabled:bg-gray-300 w-full flex justify-center bg-red-400 hover:bg-red-500 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-300"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          style="fill: rgb(255, 255, 255);transform: ;msFilter:;"
+          ><path
+            d="M20.283 10.356h-8.327v3.451h4.792c-.446 2.193-2.313 3.453-4.792 3.453a5.27 5.27 0 0 1-5.279-5.28 5.27 5.27 0 0 1 5.279-5.279c1.259 0 2.397.447 3.29 1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233a8.908 8.908 0 0 0-8.934 8.934 8.907 8.907 0 0 0 8.934 8.934c4.467 0 8.529-3.249 8.529-8.934 0-.528-.081-1.097-.202-1.625z"
+          ></path></svg
+        >
+        Ingresar con Google
+      </button>
+      <hr class="my-4 border-t-2 border-gray-300" />
       <a
         href="/register"
-        class="w-full flex justify-center bg-white border border-gray-200 hover:bg-gray-100 text-gray-500 p-3 rounded-full tracking-wide font-semibold shadow-md cursor-pointer transition ease-in duration-300 mt-4"
+        class="w-full flex justify-center bg-white border border-gray-200 hover:bg-gray-100 text-gray-500 p-3 rounded-full tracking-wide font-semibold shadow-md cursor-pointer transition ease-in duration-300"
       >
         ¿No tienes cuenta? Registrate
       </a>
@@ -76,11 +95,14 @@ const rememberMe = !!email;
 </AuthLayout>
 
 <script>
+  import { firebase } from "@/firebase/config";
   import { actions } from "astro:actions";
+  import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
   import Swal from "sweetalert2";
 
   const form = document.querySelector("form") as HTMLFormElement;
   const btnSubmit = document.querySelector("#btn-submit") as HTMLButtonElement;
+  const btnGoogle = document.querySelector("#btn-google") as HTMLButtonElement;
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -101,5 +123,31 @@ const rememberMe = !!email;
     }
 
     window.location.replace("/protected");
+  });
+
+  btnGoogle.addEventListener("click", async () => {
+    btnGoogle.setAttribute("disabled", "disabled");
+    const provider = new GoogleAuthProvider();
+
+    try {
+      //! Paso 1: obtener la credenciales del lado del cliente
+      const credentials = await signInWithPopup(firebase.auth, provider);
+
+      // // Paso 2: Vericar las credenciales en el backend
+      const { error } = await actions.loginWithGoogle(credentials);
+
+      if (error) {
+        alert(error.message);
+        btnGoogle.removeAttribute("disabled");
+        return;
+      }
+
+      btnGoogle.innerText = "Redireccionando...";
+      window.location.replace("/protected");
+    } catch (error) {
+      console.log(error);
+    }
+
+    btnGoogle.removeAttribute("disabled");
   });
 </script>
