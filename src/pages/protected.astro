@@ -6,7 +6,9 @@ import { Image } from "astro:assets";
 export const prerender = false;
 const { user } = Astro.locals;
 
-if (user === null) {
+console.log({ user });
+
+if (!user) {
   return Astro.redirect("/login");
 }
 
