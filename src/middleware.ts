@@ -3,7 +3,8 @@ import { defineMiddleware } from "astro:middleware";
 import { firebase } from "./firebase/config";
 
 const privateRoutes = ["/protected"];
-// `context` and `next` are automatically typed
+const notAuthenticatedRoutes = ["/login", "/register"];
+
 export const onRequest = defineMiddleware((context, next) => {
   const { url, request, locals, redirect } = context;
 
@@ -19,6 +20,14 @@ export const onRequest = defineMiddleware((context, next) => {
       name: user.displayName ?? "No display Name",
       emailVerified: user.emailVerified,
     };
+  }
+
+  if (!isLoggedIn && privateRoutes.includes(url.pathname)) {
+    return redirect("/");
+  }
+
+  if (isLoggedIn && notAuthenticatedRoutes.includes(url.pathname)) {
+    return redirect("/");
   }
 
   return next();
