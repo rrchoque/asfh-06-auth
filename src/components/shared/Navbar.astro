@@ -1,5 +1,5 @@
 ---
-
+const { isLoggedIn } = Astro.locals;
 ---
 
 <nav class="flex justify-between px-20 py-10 items-center bg-white">
@@ -9,15 +9,20 @@
       <li class="font-semibold text-gray-700">
         <a href="/">Home</a>
       </li>
-      <li class="font-semibold text-gray-700">
-        <a href="/protected">Protegido</a>
-      </li>
-      <li class="font-semibold text-gray-700">
-        <a href="/login">Ingresar</a>
-      </li>
-      <li class="font-semibold text-gray-700">
-        <a id="logout" href="#">Salir</a>
-      </li>
+      {
+        !isLoggedIn ? (
+          <li class="font-semibold text-gray-700">
+            <a href="/login">Ingresar</a>
+          </li>
+        ) : (
+          <li class="font-semibold text-gray-700">
+            <a href="/protected">Protegido</a>
+          </li>
+          <li id="logout" class="font-semibold text-gray-700">
+            <a href="#">Salir</a>
+          </li>
+        )
+      }
       <li>
         <svg
           xmlns="http://www.w3.org/2000/svg"
