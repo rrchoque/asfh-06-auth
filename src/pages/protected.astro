@@ -1,12 +1,9 @@
 ---
-import { firebase } from "@/firebase/config";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { Image } from "astro:assets";
 
 export const prerender = false;
 const { user } = Astro.locals;
-
-console.log({ user });
 
 if (!user) {
   return Astro.redirect("/login");
